@@ -16,9 +16,10 @@ public class MyGraph implements Graph {
 	}
 
 	@Override
-	public Vertex addVertex(Pair p) {
-		// TODO Auto-generated method stub
-		return null;
+	public Vertex addVertex(Pair p) { /** Not sure if this is correct */
+		MyVertex newVertex = (MyVertex) p;
+		vertices.add(newVertex);
+		return newVertex;
 	}
 
 	@Override
@@ -30,9 +31,9 @@ public class MyGraph implements Graph {
 	}
 
 	@Override
-	public boolean removeVertex(Pair p) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean removeVertex(Pair p) { /** Not sure if this is correct */
+		MyVertex tempVertex = (MyVertex) p;
+		return vertices.remove(tempVertex);
 	}
 
 	@Override
@@ -49,8 +50,10 @@ public class MyGraph implements Graph {
 	}
 
 	@Override
-	public Vertex findVertex(Pair p) {
-		// TODO Auto-generated method stub
+	public Vertex findVertex(Pair p) { /** Not sure if this is correct */
+		MyVertex tempVertex = (MyVertex) p;
+		if (vertices.contains(tempVertex))
+			return tempVertex;
 		return null;
 	}
 
