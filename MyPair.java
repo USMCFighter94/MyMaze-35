@@ -1,28 +1,30 @@
 
 public class MyPair implements Pair {
+	private int x;
+	private int y;
+	
+	public MyPair() {
+		x = 0;
+		y = 0;
+	}
 
 	@Override
 	public int getX() {
-		// TODO Auto-generated method stub
-		return 0;
+		return x;
 	}
 
 	@Override
 	public void setX(int newVal) {
-		// TODO Auto-generated method stub
-		
+		x = newVal;
 	}
 
 	@Override
 	public int getY() {
-		// TODO Auto-generated method stub
-		return 0;
+		return y;
 	}
 
 	@Override
 	public void setY(int newVal) {
-		// TODO Auto-generated method stub
-		
+		y = newVal;
 	}
-
 }
