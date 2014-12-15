@@ -1,23 +1,27 @@
 import java.util.ArrayList;
 
 public class MyEdge implements Edge {
+	private int element;
+	private ArrayList<Vertex> vertices;
+	
+	public MyEdge() {
+		element = 0;
+		vertices = new ArrayList<Vertex>();
+	}
 
 	@Override
 	public int getElement() {
-		// TODO Auto-generated method stub
-		return 0;
+		return element;
 	}
 
 	@Override
 	public void setElement(int e) {
-		// TODO Auto-generated method stub
-		
+		element = e;
 	}
 
 	@Override
 	public ArrayList<Vertex> vertices() {
-		// TODO Auto-generated method stub
-		return null;
+		return vertices;
 	}
 
 }
