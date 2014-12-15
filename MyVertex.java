@@ -1,29 +1,34 @@
 import java.util.ArrayList;
 
 public class MyVertex implements Vertex {
+	private MyPair element;
+	private ArrayList<Edge> incidentEdges;
+	private ArrayList<Vertex> adjacentVertices;
+	
+	public MyVertex() {
+		element = new MyPair();
+		incidentEdges = new ArrayList<Edge>();
+		adjacentVertices = new ArrayList<Vertex>();
+	}
 
 	@Override
 	public Pair getElement() {
-		// TODO Auto-generated method stub
-		return null;
+		return element;
 	}
 
 	@Override
 	public void setElement(Pair e) {
-		// TODO Auto-generated method stub
-		
+		element = (MyPair) e;
 	}
 
 	@Override
 	public ArrayList<Edge> incidentEdges() {
-		// TODO Auto-generated method stub
-		return null;
+		return incidentEdges;
 	}
 
 	@Override
 	public ArrayList<Vertex> adjacentVertices() {
-		// TODO Auto-generated method stub
-		return null;
+		return adjacentVertices;
 	}
 
 }
