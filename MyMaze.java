@@ -2,11 +2,17 @@ import java.util.ArrayList;
 
 
 public class MyMaze implements Maze {
+	private MyGraph graph;
+	private MyVertex[][] vertexArray;
+	
+	public MyMaze() {
+		graph = new MyGraph();
+	}
 
 	@Override
 	public void generateMaze(int rows, int columns) {
+		vertexArray = new MyVertex[rows][columns];
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
@@ -17,14 +23,12 @@ public class MyMaze implements Maze {
 
 	@Override
 	public Graph toGraph() {
-		// TODO Auto-generated method stub
-		return null;
+		return graph;
 	}
 
 	@Override
 	public Vertex[][] toArray() {
-		// TODO Auto-generated method stub
-		return null;
+		return vertexArray;
 	}
 
 	@Override
