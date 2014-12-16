@@ -1,6 +1,5 @@
 import java.util.ArrayList;
 
-
 public class MyGraph implements Graph {
 	private ArrayList<Vertex> vertices;
 	private ArrayList<Edge> edges;
@@ -169,8 +168,46 @@ public class MyGraph implements Graph {
 
 	@Override
 	public ArrayList<Vertex> shortestPath(Vertex v1, Vertex v2) {
-		// TODO Auto-generated method stub
-		return null;
+		Vertex [] prev = new Vertex [vertices.size()];
+		ArrayList <Vertex> queue = new ArrayList<Vertex>();
+		ArrayList<Vertex> reversePath = new ArrayList<Vertex>();
+		ArrayList<Vertex> shortPath = new ArrayList<Vertex>();
+		int currentV = 0;
+		
+		for (int i = 0; i < vertices.size(); i += 1){
+			((MyVertex) vertices.get(i)).setVisited(false);
+			prev[i] = null;
+			if(vertices.get(i) == v2){
+				currentV = i;
+			}
+		}
+		((MyVertex) v1).setVisited(true);
+		queue.add(v1);
+		while (!queue.isEmpty()){
+			Vertex s = queue.remove(0);
+			for(int i = 0; i < s.adjacentVertices().size(); i += 1){
+				if(((MyVertex) s.adjacentVertices().get(i)).getVisited() == false) {
+					((MyVertex) s.adjacentVertices().get(i)).setVisited(true);
+					queue.add(s.adjacentVertices().get(i));
+					prev[i] = s;
+				}	
+			}
+		}
+		while(prev[currentV] != null){
+			Vertex temp = prev[currentV];
+			reversePath.add(vertices.get(currentV));
+			for( int i = 0; i < vertices.size(); i += 1){
+				if(vertices.get(i) == temp){
+					currentV = i;
+				}
+			}
+		}
+		reversePath.add(v1);
+		for(int i = reversePath.size(); i > -1; i -= 1){
+			shortPath.add(reversePath.get(i));
+		}
+		return shortPath;
+	}
 	}
 
 	@Override
