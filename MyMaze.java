@@ -102,56 +102,86 @@ public class MyMaze implements Maze {
 
 			if (tempVertex.getVisited())
 				continue;
-
+			
 			if (vertex.getElement().getX() - 1 == tempPair.getX()) {
-				if (!isEdge(tempVertex)) {
+				switch (isEdge(tempVertex)) {
+				case 0:
 					frontierVerts.add(tempVertex);
 					newFront.setLeft(tempVertex);
+					break;
+				case 1:
 				}
 			}
+			
 			if (vertex.getElement().getX() + 1 == tempPair.getX()) {
-				if (!isEdge(tempVertex)) {
-				frontierVerts.add(tempVertex);
-				newFront.setRight(tempVertex);
+				switch (isEdge(tempVertex)) {
+				case 0:
+					frontierVerts.add(tempVertex);
+					newFront.setRight(tempVertex);
+					break;
+				case 1:
 				}
 			}
+			
 			if (vertex.getElement().getY() - 1 == tempPair.getY()) {
-				if (!isEdge(tempVertex)) {
-				frontierVerts.add(tempVertex);
-				newFront.setBottom(tempVertex);
+				switch (isEdge(tempVertex)) {
+				case 0:
+					frontierVerts.add(tempVertex);
+					newFront.setBottom(tempVertex);
+					break;
+				
 				}
 			}
+			
 			if (vertex.getElement().getY() + 1 == tempPair.getY()) {
-				frontierVerts.add(tempVertex);
-				newFront.setTop(tempVertex);
+				switch (isEdge(tempVertex)) {
+				case 0:
+					frontierVerts.add(tempVertex);
+					newFront.setTop(tempVertex);
+					break;
+				
+				}
 			}
 		}
 		frontier.add(newFront);
 	}
 
-	private boolean isEdge(MyVertex v) {
+	private int isEdge(MyVertex v) {
 		MyPair tempPair2 = (MyPair) v.getElement();
 
 		// Right Side
-		if (tempPair2.getX() + 1 > rows) { 
-			return true;
-		}
+		if (tempPair2.getX() + 1 > rows)
+			return 3;
 
 		// Left Side
-		if (tempPair2.getX() - 1 < rows) {
-			return true;
-		}
+		if (tempPair2.getX() - 1 < rows)
+			return 2;
 
 		// Bottom
-		if (tempPair2.getY() + 1 > columns) {
-			return true;
-		}
+		if (tempPair2.getY() + 1 > columns)
+			return 4;
 
 		// Top
-		if (tempPair2.getY() - 1 < columns){ 
-			return true;
-		}
-		return false;
+		if (tempPair2.getY() - 1 < columns)
+			return 1;
+		
+		// Top Left
+		if (tempPair2.getY() - 1 < columns && tempPair2.getX() - 1 < rows)
+			return 12;
+		
+		// Top Right
+		if (tempPair2.getY() - 1 < columns && tempPair2.getX() + 1 > rows)
+			return 13;
+		
+		// Bottom Left
+		if (tempPair2.getY() + 1 > columns && tempPair2.getX() - 1 < rows)
+			return 42;
+		
+		// Bottom Right
+		if (tempPair2.getY() + 1 < columns && tempPair2.getX() + 1 > rows)
+			return 43;
+		
+		return 0;
 	}
 
 	@Override
@@ -205,7 +235,7 @@ public class MyMaze implements Maze {
 		return null;
 	}
 
-	public static int randInt(int min, int max) {
+	private static int randInt(int min, int max) {
 		int randomNum = rand.nextInt((max - min) + 1) + min;
 		return randomNum;
 	}
