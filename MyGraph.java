@@ -15,8 +15,9 @@ public class MyGraph implements Graph {
 	}
 
 	@Override
-	public Vertex addVertex(Pair p) { /** Not sure if this is correct */
-		MyVertex newVertex = (MyVertex) p;
+	public Vertex addVertex(Pair p) {
+		MyVertex newVertex = new MyVertex();
+		newVertex.setElement(p);
 		vertices.add(newVertex);
 		return newVertex;
 	}
@@ -30,9 +31,22 @@ public class MyGraph implements Graph {
 	}
 
 	@Override
-	public boolean removeVertex(Pair p) { /** Not sure if this is correct */
-		MyVertex tempVertex = (MyVertex) p;
-		return vertices.remove(tempVertex);
+	public boolean removeVertex(Pair p) {
+		MyVertex tempVertex = new MyVertex();
+		for (int i = 0; i < vertices.size(); i++) {
+			
+			tempVertex = (MyVertex) vertices.get(i);
+			if (tempVertex.getElement() == p) {
+				MyVertex tempVert = new MyVertex();
+				
+				for (int j = 0; j < tempVertex.adjacentVertices().size(); j++) {
+					tempVert = (MyVertex) tempVertex.adjacentVertices().get(j);
+					removeEdge(tempVertex, tempVert);
+				}
+				return vertices.remove(tempVertex);
+			}	
+		}
+		return false;
 	}
 
 	@Override
@@ -49,10 +63,13 @@ public class MyGraph implements Graph {
 	}
 
 	@Override
-	public Vertex findVertex(Pair p) { /** Not sure if this is correct */
-		MyVertex tempVertex = (MyVertex) p;
-		if (vertices.contains(tempVertex))
-			return tempVertex;
+	public Vertex findVertex(Pair p) {
+		MyVertex tempVertex = new MyVertex();
+		for (int i = 0; i < vertices.size(); i++) {
+			tempVertex = (MyVertex) vertices.get(i);
+			if (tempVertex.getElement() == p)
+				return tempVertex;
+		}
 		return null;
 	}
 
@@ -173,7 +190,7 @@ public class MyGraph implements Graph {
 		ArrayList<Vertex> reversePath = new ArrayList<Vertex>();
 		ArrayList<Vertex> shortPath = new ArrayList<Vertex>();
 		int currentV = 0;
-		
+
 		for (int i = 0; i < vertices.size(); i += 1){
 			((MyVertex) vertices.get(i)).setVisited(false);
 			prev[i] = null;
@@ -207,7 +224,6 @@ public class MyGraph implements Graph {
 			shortPath.add(reversePath.get(i));
 		}
 		return shortPath;
-	}
 	}
 
 	@Override

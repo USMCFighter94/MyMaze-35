@@ -23,5 +23,4 @@ public class MyEdge implements Edge {
 	public ArrayList<Vertex> vertices() {
 		return vertices;
 	}
-
 }
