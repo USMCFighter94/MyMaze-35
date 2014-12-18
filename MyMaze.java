@@ -1,31 +1,54 @@
 import java.util.ArrayList;
 import java.util.Random;
 
+/**
+ * This is a maze data structure that generates a random maze based on user inputs. 
+ * 
+ * Zach Dunham, Colin Brevitz
+ * MyMaze - 35
+ * CS2321, Fall 2014
+ * 
+ */
 public class MyMaze implements Maze {
 	private MyGraph graph;
 	private MyVertex startVert;
 	private MyVertex finishVert;
 	private MyVertex[][] vertexArray;
 	private ArrayList<MyVertex> frontierVerts;
+	private ArrayList<MyVertex> masterFrontierVerts;
 	private ArrayList<Frontier> frontier;
 	private static Random rand;
 	private int rows;
 	private int columns;
 
+	//constructor
 	public MyMaze() {
 		graph = new MyGraph();
 		startVert = new MyVertex();
 		finishVert = new MyVertex();
 		frontierVerts = new ArrayList<MyVertex>();
+		masterFrontierVerts = new ArrayList<MyVertex>();
 		frontier = new ArrayList<Frontier>();
 		rand  = new Random();
 		rows = 0;
 		columns = 0;
 	}
 
-	@Override
+	/**
+	 * Generates maze with a specified amount of rows and columns.
+	 * 
+	 * @param rows,
+	 * 			The number of rows.
+	 * @param columns,
+	 * 			The number of columns.
+	 * 
+	 */
 	public void generateMaze(int rows, int columns) {
 		vertexArray = new MyVertex[rows][columns];
+		this.rows = rows;
+		this.columns = columns;
+		MyVertex random = new MyVertex();
+		MyVertex parent = new MyVertex();
 
 		for (int i = 0; i < rows; i++) {
 			for (int j = 0; j < columns; j++) {
@@ -49,24 +72,23 @@ public class MyMaze implements Maze {
 
 		for (int k = 0; k < graph.vertices().size(); k++) {
 			startVertex = (MyVertex) graph.vertices().get(k);
-			if (startVertex.getElement() == tempPair)
+			if (startVertex.getElement().getX() == tempPair.getX() &&
+					startVertex.getElement().getY() == tempPair.getY())
 				break;
 		}
 
 		// Get frontier vertices for starting vertex
-		findFrontiers(startVertex);
-
-		MyVertex random = new MyVertex();
-		MyVertex parent = new MyVertex();
+		findFrontiers(startVertex, parent);
 
 		while (!frontierVerts.isEmpty()) {
+
 			// Get random frontier
 			random  = findRandomFrontierVertex();
 
 			// Find Random's parent
 			for (int j = 0; j < frontier.size(); j++) {
-				if (frontier.get(j).getTop() == random);
-				parent = frontier.get(j).getParent();
+				if (frontier.get(j).getTop() == random)
+					parent = frontier.get(j).getParent();
 				if (frontier.get(j).getLeft() == random)
 					parent = frontier.get(j).getParent();
 				if (frontier.get(j).getRight() == random)
@@ -74,153 +96,131 @@ public class MyMaze implements Maze {
 				if (frontier.get(j).getBottom() == random)
 					parent = frontier.get(j).getParent();
 			}
-			// Connect parent and random
-			graph.addEdge(parent, random);
+			if (parent == null) {
 
+			} else {
+				// Connect parent and random
+				graph.addEdge(parent, random);
+			}
 			// Add random's frontiers
-			findFrontiers(random);
+			findFrontiers(random, parent);
 		}
-
-		this.rows = rows;
-		this.columns = columns;
-		startVert = (MyVertex) startVertex();
-		finishVert = (MyVertex) finishVertex();
 	}
 
+	//helper for generate maze
 	private MyVertex findRandomFrontierVertex() {
-		int random = randInt(0, frontierVerts.size());
-		return frontierVerts.get(random);
+		int random = randInt(0, frontierVerts.size() - 1);
+		return frontierVerts.remove(random);
 	}
 
-	private void findFrontiers(MyVertex vertex) {
+	//helper for generate maze
+	private void findFrontiers(MyVertex vertex, MyVertex parent) {
 		MyVertex tempVertex = new MyVertex();
 		Frontier newFront = new Frontier(vertex);
 
+		//go through all the vertices in the graph
 		for (int j = 0; j < graph.vertices().size(); j++) {
 			tempVertex = (MyVertex) graph.vertices().get(j);
 			MyPair tempPair = (MyPair) tempVertex.getElement();
+			if(tempVertex == vertex) {
+			}
+			else if (tempVertex == parent){
+			}
+			else {
+				if (vertex.getElement().getX() - 1 == tempPair.getX() &&
+						vertex.getElement().getY() == tempPair.getY()) {
+					if (!masterFrontierVerts.contains(tempVertex)) {
+						frontierVerts.add(tempVertex);
+						masterFrontierVerts.add(tempVertex);
+						newFront.setLeft(tempVertex);
+					}
+				}
+				if (vertex.getElement().getX() + 1 == tempPair.getX() &&
+						vertex.getElement().getY() == tempPair.getY()) {
+					if (!masterFrontierVerts.contains(tempVertex)) {
+						frontierVerts.add(tempVertex);
+						masterFrontierVerts.add(tempVertex);
+						newFront.setRight(tempVertex);
+					}
 
-			if (tempVertex.getVisited())
-				continue;
-			
-			if (vertex.getElement().getX() - 1 == tempPair.getX()) {
-				switch (isEdge(tempVertex)) {
-				case 0:
-					frontierVerts.add(tempVertex);
-					newFront.setLeft(tempVertex);
-					break;
-				case 1:
 				}
-			}
-			
-			if (vertex.getElement().getX() + 1 == tempPair.getX()) {
-				switch (isEdge(tempVertex)) {
-				case 0:
-					frontierVerts.add(tempVertex);
-					newFront.setRight(tempVertex);
-					break;
-				case 1:
+				if (vertex.getElement().getY() - 1 == tempPair.getY() &&
+						vertex.getElement().getX() == tempPair.getX()) {
+					if (!masterFrontierVerts.contains(tempVertex)) {
+						frontierVerts.add(tempVertex);
+						masterFrontierVerts.add(tempVertex);
+						newFront.setBottom(tempVertex);
+					}
+
 				}
-			}
-			
-			if (vertex.getElement().getY() - 1 == tempPair.getY()) {
-				switch (isEdge(tempVertex)) {
-				case 0:
-					frontierVerts.add(tempVertex);
-					newFront.setBottom(tempVertex);
-					break;
-				
-				}
-			}
-			
-			if (vertex.getElement().getY() + 1 == tempPair.getY()) {
-				switch (isEdge(tempVertex)) {
-				case 0:
-					frontierVerts.add(tempVertex);
-					newFront.setTop(tempVertex);
-					break;
-				
+				if (vertex.getElement().getY() + 1 == tempPair.getY() &&
+						vertex.getElement().getX() == tempPair.getX()) {
+					if (!masterFrontierVerts.contains(tempVertex)) {
+						frontierVerts.add(tempVertex);
+						masterFrontierVerts.add(tempVertex);
+						newFront.setTop(tempVertex);
+					}
 				}
 			}
 		}
 		frontier.add(newFront);
 	}
 
-	private int isEdge(MyVertex v) {
-		MyPair tempPair2 = (MyPair) v.getElement();
-
-		// Right Side
-		if (tempPair2.getX() + 1 > rows)
-			return 3;
-
-		// Left Side
-		if (tempPair2.getX() - 1 < rows)
-			return 2;
-
-		// Bottom
-		if (tempPair2.getY() + 1 > columns)
-			return 4;
-
-		// Top
-		if (tempPair2.getY() - 1 < columns)
-			return 1;
-		
-		// Top Left
-		if (tempPair2.getY() - 1 < columns && tempPair2.getX() - 1 < rows)
-			return 12;
-		
-		// Top Right
-		if (tempPair2.getY() - 1 < columns && tempPair2.getX() + 1 > rows)
-			return 13;
-		
-		// Bottom Left
-		if (tempPair2.getY() + 1 > columns && tempPair2.getX() - 1 < rows)
-			return 42;
-		
-		// Bottom Right
-		if (tempPair2.getY() + 1 < columns && tempPair2.getX() + 1 > rows)
-			return 43;
-		
-		return 0;
-	}
-
-	@Override
+	/**
+	 * Solves the maze.
+	 * 
+	 * @return an Arraylist containing the path of vertices to take to 
+	 * solve the maze
+	 * 
+	 */
 	public ArrayList<Vertex> solveMaze() {
 		return graph.shortestPath(startVert, finishVert);
 	}
 
-	@Override
+	/**
+	 * Returns a graph representation of the maze. 
+	 */
 	public Graph toGraph() {
 		return graph;
 	}
 
-	@Override
+	/**
+	 * returns an 2D array of the vertices in the maze.
+	 */
 	public Vertex[][] toArray() {
 		return vertexArray;
 	}
 
-	@Override
+	/**
+	 * chooses a start vertex in the maze
+	 */
 	public Vertex startVertex() {
-		int startX = randInt(0,rows);
-		int startY = randInt(0, columns);
+		int startX = randInt(0, rows - 1);
+		int startY = randInt(0, columns - 1);
 
+		
 		MyPair newPair = new MyPair();
 		newPair.setX(startX);
 		newPair.setY(startY);
-
+	
 		MyVertex vertex = new MyVertex();
 		for (int i = 0; i < graph.vertices().size(); i++) {
 			vertex = (MyVertex) graph.vertices().get(i);
-			if (vertex.getElement() == newPair)
-				return vertex;
+			if (vertex.getElement().getX() == newPair.getX() &&
+					vertex.getElement().getY() == newPair.getY()){
+				startVert = vertex;
+				return startVert;
+			}
 		}
 		return null;
 	}
-
-	@Override
+	
+	/**
+	 * chooses a finish vertex in the maze
+	 */
 	public Vertex finishVertex() {
-		int startX = randInt(0,rows);
-		int startY = randInt(0, columns);
+		int startX = randInt(0,rows - 1);
+		int startY = randInt(0, columns - 1);
 
 		MyPair newPair = new MyPair();
 		newPair.setX(startX);
@@ -229,17 +229,22 @@ public class MyMaze implements Maze {
 		MyVertex vertex = new MyVertex();
 		for (int i = 0; i < graph.vertices().size(); i++) {
 			vertex = (MyVertex) graph.vertices().get(i);
-			if (vertex.getElement() == newPair)
-				return vertex;
+			if (vertex.getElement().getX() == newPair.getX() &&
+					vertex.getElement().getY() == newPair.getY()){
+				finishVert = vertex;
+				return finishVert;
+			}
 		}
 		return null;
 	}
 
-	private static int randInt(int min, int max) {
+	//helper for finding start and end of maze
+	public static int randInt(int min, int max) {
 		int randomNum = rand.nextInt((max - min) + 1) + min;
 		return randomNum;
 	}
 
+	//helper class to store each vertex and its adjacent vertices
 	private class Frontier {
 		private MyVertex parent;
 		private MyVertex top;
@@ -290,5 +295,18 @@ public class MyMaze implements Maze {
 		public MyVertex getBottom() {
 			return bottom;
 		}
-	}	
+	}
+
+	public String toString () {
+		String result = "";
+		
+		for (int i = 0; i < vertexArray.length; i++) {
+			for (int j = 0; j < vertexArray[i].length; j ++) {
+				result += vertexArray[i][j] + " ";
+			}
+			result += "\n";
+		}
+		return result;
+	}
 }
+

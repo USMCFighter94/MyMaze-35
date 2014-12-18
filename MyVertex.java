@@ -1,5 +1,13 @@
 import java.util.ArrayList;
 
+/**
+ * MyVertex class that holds what vertices are in the graph.
+ * 
+ * Zach Dunham, Colin Brevitz
+ * MyMaze - 35
+ * CS2321, Fall 2014
+ * 
+ */
 public class MyVertex implements Vertex {
 	private MyPair element;
 	private ArrayList<Edge> incidentEdges;
@@ -21,16 +29,16 @@ public class MyVertex implements Vertex {
 	public boolean getVisited() {
 		return visited;
 	}
-
+	
 	@Override
 	public void setElement(Pair e) {
 		element = (MyPair) e;
 	}
 	
-	public void setVisited(boolean t) {
+	public void setVisited (boolean t) {
 		visited = t;
 	}
-
+	
 	@Override
 	public ArrayList<Edge> incidentEdges() {
 		return incidentEdges;
@@ -40,5 +48,8 @@ public class MyVertex implements Vertex {
 	public ArrayList<Vertex> adjacentVertices() {
 		return adjacentVertices;
 	}
-
+	
+	public String toString () {
+		return element.toString();
+	}
 }
