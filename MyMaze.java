@@ -302,7 +302,12 @@ public class MyMaze implements Maze {
 		
 		for (int i = 0; i < vertexArray.length; i++) {
 			for (int j = 0; j < vertexArray[i].length; j ++) {
-				result += vertexArray[i][j] + " ";
+				if (vertexArray[i][j] == startVert)
+					result += "S ";
+				else if (vertexArray[i][j] == finishVert)
+					result += "F ";
+				else
+					result += "* ";
 			}
 			result += "\n";
 		}
